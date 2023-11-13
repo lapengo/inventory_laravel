@@ -12,7 +12,7 @@ class EnumsHelper
             const FAILED = 'FAILED';
         };
     }
-    public static function StatusApi()
+    public static function HttpStatusRes()
     {
         return new class {
             const OK = 'ok';

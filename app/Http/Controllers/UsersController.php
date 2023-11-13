@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UsersModel;
-use App\Http\Resources\PostResource;
+use App\Http\Resources\ResponseResource;
 use Illuminate\Http\Request;
 use Faker\Factory as Faker;
 use App\Helpers\EnumsHelper;
@@ -15,10 +15,18 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/users/user",
+     *     tags={"Users"},
+     *     summary="Get a list of users",
+     *     @OA\Response(response="200", description="List of users"),
+     * )
+     */
     public function index()
     {
-        $posts = UsersModel::latest()->paginate(5);
-        return new PostResource(true, 'List Data Posts', $posts);
+        $datas = UsersModel::latest()->paginate(5);
+        return new ResponseResource(EnumsHelper::HttpStatusCode()::OK, $datas);
     }
 
     /**
@@ -39,7 +47,9 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        var_dump($request);
+        exit();
+        return;
     }
 
     /**
@@ -88,7 +98,7 @@ class UsersController extends Controller
     }
 
 
-    public function generateRandomData($count)
+    public function generateRandomData(int $count)
     {
         $faker = Faker::create();
 
@@ -117,9 +127,9 @@ class UsersController extends Controller
 
         if ($status)
         {
-            return new PostResource(EnumsHelper::HttpStatusCode()::CREATED, EnumsHelper::StatusApi()::CREATED, $data);
+            return new ResponseResource(EnumsHelper::HttpStatusCode()::CREATED, $data);
         }else{
-            return new PostResource(EnumsHelper::HttpStatusCode()::BAD_REQUEST, EnumsHelper::StatusApi()::BAD_REQUEST, $data);
+            return new ResponseResource(EnumsHelper::HttpStatusCode()::BAD_REQUEST, $data);
         }
 
     }
