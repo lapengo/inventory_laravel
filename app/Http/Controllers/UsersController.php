@@ -47,9 +47,11 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        var_dump($request);
-        exit();
-        return;
+        $data = $request->all();
+
+        $data["password"] = \Hash::make($data["password"]);
+        $create = UsersModel::create($data);
+        return new ResponseResource(EnumsHelper::HttpStatusCode()::CREATE, $create);
     }
 
     /**
@@ -61,6 +63,24 @@ class UsersController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function GetByUsername(string $usename)
+    {
+        var_dump($usename);
+        exit();
+
+        if ($usename != '')
+        {
+            $data = UsersModel::where('username', $usename)->first();
+            if($data['username'] != null || $data['username'] != '')
+            {
+                return new ResponseResource(EnumsHelper::HttpStatusCode()::OK, $usename);
+            }
+            return new ResponseResource(EnumsHelper::HttpStatusCode()::NOT_FOUND, null);
+        }
+
+        return new ResponseResource(EnumsHelper::HttpStatusCode()::NOT_FOUND, null);
     }
 
     /**
@@ -94,7 +114,11 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = UsersModel::findOrFail($id);
+
+        $data->delete();
+
+        return new ResponseResource(EnumsHelper::HttpStatusCode()::NO_CONTENT, $data);
     }
 
 

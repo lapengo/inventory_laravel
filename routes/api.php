@@ -21,5 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'users'], function () {
     Route::apiResource('user', UsersController::class);
+    Route::get('/user/{username}', [UsersController::class, 'GetByUsername']);
     Route::get('/fakers/{count}', [UsersController::class, 'generateRandomData']);
 });
